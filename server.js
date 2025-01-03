@@ -1,5 +1,3 @@
-// server.js
-
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -12,33 +10,25 @@ dotenv.config();
 
 const app = express();
 
-// Connect to Database
+// Database Connection
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
-.then(() => console.log('MongoDB Connected...'))
-.catch(err => {
-    console.error(err.message);
-    process.exit(1);
-});
+.then(() => console.log('MongoDB Connected'))
+.catch((err) => console.error(err));
 
 // Middleware
 app.use(express.json());
 
 // CORS Configuration
-const allowedOrigins = [
-    'https://virtual-quran-academy.vercel.app',  // Deployed frontend
-    'http://localhost:4200',                     // Local development
-];
-
 app.use(cors({
-    origin: allowedOrigins,
+    origin: ['https://virtual-quran-academy.vercel.app', 'http://localhost:4200'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
+    credentials: true
 }));
 
-// Session Configuration
+// Session Middleware
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -52,13 +42,12 @@ app.use(session({
     },
 }));
 
-// Define Routes
+// Register Auth Routes
 app.use('/api/auth', authRoutes);
 
-// Define a simple route
+// Root Route (Optional)
 app.get('/', (req, res) => res.send('API Running'));
 
-// Start Server
+// Start the Server
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
