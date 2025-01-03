@@ -48,7 +48,7 @@ app.use(session({
 }));
 
 // Define Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth/signup', authRoutes);
 
 // Define a simple route
 app.get('/', (req, res) => res.send('API Running'));
