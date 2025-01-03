@@ -27,8 +27,13 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use(express.json());
 
 // CORS Configuration
+const allowedOrigins = [
+    'https://virtual-quran-academy.vercel.app',  // Deployed frontend
+    'http://localhost:4200',                     // Local development
+];
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
@@ -48,7 +53,7 @@ app.use(session({
 }));
 
 // Define Routes
-app.use('/api/auth/signup', authRoutes);
+app.use('/api/auth', authRoutes);
 
 // Define a simple route
 app.get('/', (req, res) => res.send('API Running'));
